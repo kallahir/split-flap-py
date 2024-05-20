@@ -1,3 +1,4 @@
+import machine
 import uasyncio
 
 from asyncserver.request import Request
@@ -10,6 +11,7 @@ print('[starting]')
 m = StepperMotor(32,33,25,26)
 s = HallEffect(13)
 u = Unit(m, 0, s)
+u.reset()
 
 server = AsyncServer()
 
@@ -23,9 +25,12 @@ async def on(r: Request):
     u.reset()
     return server.response(200, content='unit reset')
 
+@server.route('/reboot')
+async def on(r: Request):
+    machine.reset()
+
 @server.route('/move')
 async def on(r: Request):
-    # FIXME: I can't send request for the symbols, only letters and numbers
     print(f'[args={r.args}]')
     if 'letter' in r.args:
         u.move_to_letter(r.args['letter'])
