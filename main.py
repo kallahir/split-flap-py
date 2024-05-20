@@ -26,6 +26,7 @@ async def on(r: Request):
 @server.route('/move')
 async def on(r: Request):
     # FIXME: I can't send request for the symbols, only letters and numbers
+    print(f'[args={r.args}]')
     if 'letter' in r.args:
         u.move_to_letter(r.args['letter'])
         return server.response(200, content=f'unit moved to letter=' + r.args['letter'])
