@@ -1,4 +1,4 @@
-LETTERS = ['-', '?', '!', ' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '$', '&', '#', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', '.']
+LETTERS = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '$', '&', '#', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', '.', '-', '?', '!']
 NUM_FLAPS = 45
 LETTER_STEP = 11.3
 
@@ -26,17 +26,20 @@ class Unit(object):
         self.__motor.move(distance)
 
     def reset(self):
-        print(f'[moving motor={self.__motor_id} away from magnet]')
+        print(f'[roaming motor={self.__motor_id} back to magnet]')
         while True:
             if self.__sensor.get_value() == 0:
+                self.__motor.move_forward()
+            else:
                 break
-            self.__motor.move_forward()
 
-        print(f'[roaming motor={self.__motor_id} to start]')
+        print(f'[romaing motor={self.__motor_id} away from magnet]')
         while True:
             if self.__sensor.get_value() == 1:
+                self.__motor.move_forward()
+            else:
+                self.__motor.move_forward()
                 break
-            self.__motor.move_forward()
 
     def __letter_dict(self):
         for idx, letter in enumerate(LETTERS):
