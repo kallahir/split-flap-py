@@ -7,22 +7,32 @@ from asyncserver.server import AsyncServer
 from motor.stepper import StepperMotor 
 from sensor.halleffect import HallEffect
 from unit.unit import Unit
+from unit.manager import UnitManager
 
 print('[starting]')
-m = StepperMotor(32,33,25,26)
-s = HallEffect(39)
-u = Unit(m, 0, s)
+# NOTE: Third wave of tests using Two Units in a single Unit Manager with fast interleave steps and no APIs
+um = UnitManager([Unit(StepperMotor(32,33,25,26), 0, HallEffect(39)),Unit(StepperMotor(27,14,12,13), 1, HallEffect(36))])
+um.reset_units()
+um.move_to_letters('oi')
+time.sleep(1)
+um.move_to_letters('bl')
 
-m1 = StepperMotor(27,14,12,13)
-s1 = HallEffect(36)
-u1 = Unit(m1, 1, s1)
+# NOTE: Second wave of tests using Two Units, one at a time, and no APIs
+# m = StepperMotor(32,33,25,26)
+# s = HallEffect(39)
+# u = Unit(m, 0, s)
 
-while True:
-    u.reset()
-    time.sleep_ms(500)
-    u1.reset()
-    time.sleep(5)
+# m1 = StepperMotor(27,14,12,13)
+# s1 = HallEffect(36)
+# u1 = Unit(m1, 1, s1)
 
+# while True:
+#     u.reset()
+#     time.sleep_ms(500)
+#     u1.reset()
+#     time.sleep(5)
+
+# NOTE: First wave of tests using a Single Unit and Async APIs for control
 # server = AsyncServer()
 
 # @server.route('/index')

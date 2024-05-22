@@ -33,7 +33,7 @@ class StepperMotor(object):
         elif direction == Direction.BACKWARD:
             for _ in range(0, distance):
                 self.move_backward(delay)
-        time.sleep_ms(250)
+        # time.sleep_ms(250)
 
     def move_forward(self, delay=3):
         for step in SEQ:
