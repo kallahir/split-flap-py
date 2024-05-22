@@ -25,21 +25,7 @@ class Unit(object):
         self.__current_position = target_position
         self.__motor.move(distance)
 
-    def reset(self, adjustment=0.5):
-        # if self.__sensor.get_value == 1:
-        #     print(f'[moving motor={self.__motor_id} away from magnet for calibration]')
-        #     while True:
-        #         if self.__sensor.get_value() == 1:
-        #             self.__motor.move_forward()
-        #         else:
-        #             self.__motor.move(int(LETTER_STEP*3))
-        #             break
-        
-        value = self.__sensor.get_value()
-        print(f'[sensor={self.__motor_id} value={value}]')
-        print(f'[moving motor={self.__motor_id} forward for calibration]')
-        self.__motor.move(int(LETTER_STEP*10))
-
+    def reset(self):
         print(f'[roaming motor={self.__motor_id} to find magnet]')
         while True:
             value = self.__sensor.get_value()
@@ -56,11 +42,8 @@ class Unit(object):
             if value == 1:
                 self.__motor.move_forward()
             else:
-                # self.__motor.move(int(LETTER_STEP*adjustment))
                 self.__motor.move_forward()
                 break
-
-        self.__motor.move(int(LETTER_STEP*adjustment))
 
     def __letter_dict(self):
         for idx, letter in enumerate(LETTERS):
