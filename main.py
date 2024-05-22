@@ -1,4 +1,5 @@
 import machine
+import time
 import uasyncio
 
 from asyncserver.request import Request
@@ -9,41 +10,50 @@ from unit.unit import Unit
 
 print('[starting]')
 m = StepperMotor(32,33,25,26)
-s = HallEffect(13)
+s = HallEffect(39)
 u = Unit(m, 0, s)
-u.reset()
 
-server = AsyncServer()
+m1 = StepperMotor(27,14,12,13)
+s1 = HallEffect(36)
+u1 = Unit(m1, 1, s1)
 
-@server.route('/index')
-async def on(r: Request):
-    page_content = open('/data/main.html', 'r').read()
-    return server.response(200, content_type='text/html', content=page_content)
-
-@server.route('/reset')
-async def on(r: Request):
+while True:
     u.reset()
-    return server.response(200, content='unit reset')
+    time.sleep_ms(500)
+    u1.reset()
+    time.sleep(5)
 
-@server.route('/reboot')
-async def on(r: Request):
-    machine.reset()
+# server = AsyncServer()
 
-@server.route('/move')
-async def on(r: Request):
-    print(f'[args={r.args}]')
-    if 'letter' in r.args:
-        u.move_to_letter(r.args['letter'])
-        return server.response(200, content=f'unit moved to letter=' + r.args['letter'])
-    return server.response(400, content='invalid request')
+# @server.route('/index')
+# async def on(r: Request):
+#     page_content = open('/data/main.html', 'r').read()
+#     return server.response(200, content_type='text/html', content=page_content)
 
-loop = uasyncio.get_event_loop()
-loop.create_task(server.start())
+# @server.route('/reset')
+# async def on(r: Request):
+#     u.reset()
+#     return server.response(200, content='unit reset')
 
-try: 
-    loop.run_forever()
-except Exception as e:
-    print(f'[exception {e}]')
-except KeyboardInterrupt:
-    print('[stopping]')
-    loop.close()
+# @server.route('/reboot')
+# async def on(r: Request):
+#     machine.reset()
+
+# @server.route('/move')
+# async def on(r: Request):
+#     print(f'[args={r.args}]')
+#     if 'letter' in r.args:
+#         u.move_to_letter(r.args['letter'])
+#         return server.response(200, content=f'unit moved to letter=' + r.args['letter'])
+#     return server.response(400, content='invalid request')
+
+# loop = uasyncio.get_event_loop()
+# loop.create_task(server.start())
+
+# try: 
+#     loop.run_forever()
+# except Exception as e:
+#     print(f'[exception {e}]')
+# except KeyboardInterrupt:
+#     print('[stopping]')
+#     loop.close()
