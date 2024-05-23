@@ -18,30 +18,32 @@ class UnitManager(object):
                 return
             distances[unit_idx] = self.__units[unit_idx].get_distance_to_letter(letter)
         
-        curr_distance = [0 for _ in self.__units]
-        while True:
-            units_moved = 0
-            for unit_idx, unit in enumerate(self.__units):
-                if curr_distance[unit_idx] >= distances[unit_idx]:
-                    continue
+        # FIXME: Interleave is causing issues maybe due to lack of proper sleep between movements
+        # curr_distance = [0 for _ in self.__units]
+        # while True:
+        #     units_moved = 0
+        #     for unit_idx, unit in enumerate(self.__units):
+        #         if curr_distance[unit_idx] >= distances[unit_idx]:
+        #             continue
                     
-                movement = 11
-                if curr_distance[unit_idx] + movement > distances[unit_idx]:
-                    movement = distances[unit_idx] - curr_distance[unit_idx] 
+        #         movement = 11
+        #         if curr_distance[unit_idx] + movement > distances[unit_idx]:
+        #             movement = distances[unit_idx] - curr_distance[unit_idx] 
 
-                unit.move_motor(movement)
-                curr_distance[unit_idx] += movement
-                units_moved += 1
+        #         unit.move_motor(movement)
+        #         curr_distance[unit_idx] += movement
+        #         units_moved += 1
             
-            if units_moved == 0:
-                break
+        #     if units_moved == 0:
+        #         break
             
-        # for unit_idx, distance in distances.items():
-        #     self.__units[unit_idx].move_motor(distance)
+        for unit_idx, distance in distances.items():
+            self.__units[unit_idx].move_motor(distance)
     
     # TODO: Add interleave
     def reset_units(self):
-        adj = [3, 9]
+        adj = [3, 7, 9]
+        # adj = [6]
         for idx, unit in enumerate(self.__units):
             unit.reset(adj[idx])
-            time.sleep_ms(100)
+            time.sleep_ms(200)

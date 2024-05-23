@@ -11,11 +11,15 @@ from unit.manager import UnitManager
 
 print('[starting]')
 # NOTE: Third wave of tests using Two Units in a single Unit Manager with fast interleave steps and no APIs
-um = UnitManager([Unit(StepperMotor(32,33,25,26), 0, HallEffect(39)),Unit(StepperMotor(27,14,12,13), 1, HallEffect(36))])
+units =[Unit(StepperMotor(32,33,25,26), 0, HallEffect(39)),Unit(StepperMotor(27,14,12,13), 1, HallEffect(36)),Unit(StepperMotor(15,2,0,4), 2, HallEffect(34))] 
+um = UnitManager(units)
+# um = UnitManager([units[1]])
 um.reset_units()
-um.move_to_letters('oi')
 time.sleep(1)
-um.move_to_letters('bl')
+um.move_to_letters('oi?')
+time.sleep(1)
+um.move_to_letters('zzz')
+# um.move_to_letters('oi?')
 
 # NOTE: Second wave of tests using Two Units, one at a time, and no APIs
 # m = StepperMotor(32,33,25,26)
