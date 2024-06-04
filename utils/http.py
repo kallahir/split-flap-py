@@ -58,3 +58,6 @@ HTTP_CODES = {
     510: 'Not extended',
     511: 'Network authentication required',
 }
+
+HTML_CONTENT_TYPE = 'text/html'
+JSON_CONTENT_TYPE = 'application/json'

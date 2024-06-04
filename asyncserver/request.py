@@ -23,21 +23,24 @@ class Request():
             return {v[0]: unquote(v[1]).decode('utf-8') for v in values}
         return {}
 
-    def empty(self):
-        return len(self.__raw_request) == 0
-    
-    def __parse(self):
-        parts = self.__raw_request.split("\r\n")
-        print(parts)
-        if len(parts) < 1 and len(parts[0].split(' ')) != 3:
-            raise InvalidRequestException()
-        m = re.search('(^[A-Z]+)\\s+(/[-a-zA-Z0-9_./=]+)(\?[-a-zA-Z0-9_.=&%]*)?', parts[0])
-        self.__method, self.__path, self.__params = m.group(1), m.group(2), m.group(3) 
-        print(f'[params={self.__params}]')
-        if self.__method == 'POST':
-            self.__payload = parts[7] 
+    @property
+    def payload(self):
+        return self.__payload
 
-# Reference: https://forum.micropython.org/viewtopic.php?p=18183&sid=6899ca7471f995a84f8679b3d2dbadb6#p18183
+    def __parse(self):
+        try:
+            parts = self.__raw_request.split("\r\n")
+            print(f'[parts={parts}]')
+            if len(parts) < 1 and len(parts[0].split(' ')) != 3:
+                raise InvalidRequestException('Request doesn\'t have the required minimum number of parts')
+            m = re.search('(^[A-Z]+)\\s+(/[-a-zA-Z0-9_./=]+)(\?[-a-zA-Z0-9_.=&%]*)?', parts[0])
+            self.__method, self.__path, self.__params = m.group(1), m.group(2), m.group(3) 
+            print(f'[params={self.__params}]')
+            if self.__method == 'POST':
+                self.__payload = parts[7] 
+        except Exception as e:
+            raise InvalidRequestException(f'Request parse failed with Error: {str(e)}')
+
 _hexdig = '0123456789ABCDEFabcdef'
 _hextobyte = None
 

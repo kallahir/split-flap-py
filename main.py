@@ -6,11 +6,13 @@ import ujson as json
 import usocket as socket
 
 from asyncserver.request import Request
+from asyncserver.response import Response
 from asyncserver.server import AsyncServer
 from motor.stepper import StepperMotor 
 from sensor.halleffect import HallEffect
 from unit.unit import Unit
 from unit.manager import UnitManager
+from utils.http import HTML_CONTENT_TYPE, JSON_CONTENT_TYPE
 
 print('[starting]')
 # NOTE: Broadcast testing 
@@ -63,14 +65,19 @@ print('[starting]')
 server = AsyncServer()
 
 @server.route('/index')
-async def on(r: Request):
+async def on(r: Request) -> Response:
     gc.collect()
-    page_content = open('/ui/webpages/index.html', 'r').read()
-    return server.response(200, content_type='text/html', content=page_content)
+    return Response(content_type=HTML_CONTENT_TYPE, uri='ui/webpages/index.html')
 
-# @server.route('/ping')
-# async def on(r: Request):
-#     return server.response(200, content_type='application/json', content='{"unit": 1}')
+@server.route('/config')
+async def on(r: Request) -> Response:
+    gc.collect()
+    return Response(content_type=HTML_CONTENT_TYPE, uri='ui/webpages/config.html')
+
+@server.route('/move')
+async def on(r: Request) -> Response:
+    gc.collect()
+    return Response(content_type=JSON_CONTENT_TYPE, content=json.dumps(r.args))
 
 # @server.route('/reset')
 # async def on(r: Request):
