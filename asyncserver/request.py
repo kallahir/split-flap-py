@@ -1,4 +1,3 @@
-import binascii
 import re
 
 class InvalidRequestException(Exception):
@@ -46,8 +45,6 @@ def unquote(string):
     """unquote('abc%20def') -> b'abc def'."""
     global _hextobyte
 
-    # Note: strings are encoded as UTF-8. This is only an issue if it contains
-    # unescaped non-ASCII characters, which URIs should not.
     if not string:
         return b''
 
@@ -61,8 +58,6 @@ def unquote(string):
     res = [bits[0]]
     append = res.append
 
-    # Delay the initialization of the table to not waste memory
-    # if the function is never called
     if _hextobyte is None:
         _hextobyte = {(a + b).encode(): bytes([int(a + b, 16)])
                       for a in _hexdig for b in _hexdig}

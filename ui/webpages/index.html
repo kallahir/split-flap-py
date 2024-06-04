@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0;">
+    <style>
+        html {
+            font-family: sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            box-sizing: border-box;
+            font-size: 20px;
+            line-height: 1.5;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            background: #fff;
+            color: #3b4351;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            font-size: .8rem;
+            overflow-x: hidden;
+            text-rendering: optimizeLegibility;
+        }
+
+        .container {
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: .4rem;
+            padding-right: .4rem;
+            width: 100%;
+        }
+
+        .form-group:not(:last-child) {
+            margin-bottom: .4rem;
+        }
+
+        .form-label {
+            display: block;
+            line-height: 1.2rem;
+            padding: .3rem 0;
+        }
+
+        .form-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: #fff;
+            background-image: none;
+            border: .05rem solid #bcc3ce;
+            border-radius: .1rem;
+            color: #3b4351;
+            display: block;
+            font-size: .8rem;
+            height: 1.8rem;
+            line-height: 1.2rem;
+            max-width: 100%;
+            outline: none;
+            padding: .25rem .4rem;
+            position: relative;
+            transition: background .2s, border .2s, box-shadow .2s, color .2s;
+            width: 100%;
+        }
+
+        .form-input:focus {
+            border-color: #5755d9;
+            box-shadow: 0 0 0 .1rem rgba(87, 85, 217, .2);
+        }
+
+        .form-input::placeholder {
+            color: #bcc3ce;
+        }
+
+        .form-input.input-inline {
+            display: inline-block;
+            vertical-align: middle;
+            width: auto;
+        }
+
+        .form-input[type="file"] {
+            height: auto;
+        }
+
+        textarea.form-input,
+        textarea.form-input.input-lg,
+        textarea.form-input.input-sm {
+            height: auto;
+        }
+
+        .form-input-hint {
+            color: #bcc3ce;
+            font-size: .7rem;
+            margin-top: .2rem;
+        }
+
+        .input-group .form-input,
+        .input-group .form-select {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            width: 1%;
+        }
+
+        .btn {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: #fff;
+            border: .05rem solid #5755d9;
+            border-radius: .1rem;
+            color: #5755d9;
+            cursor: pointer;
+            display: inline-block;
+            font-size: .8rem;
+            height: 1.8rem;
+            line-height: 1.2rem;
+            outline: none;
+            padding: .25rem .4rem;
+            text-align: center;
+            text-decoration: none;
+            transition: background .2s, border .2s, box-shadow .2s, color .2s;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .btn:focus {
+            box-shadow: 0 0 0 .1rem rgba(87, 85, 217, .2);
+        }
+
+        .btn:focus,
+        .btn:hover {
+            background: #f1f1fc;
+            border-color: #4b48d6;
+            text-decoration: none;
+        }
+
+        .btn:active,
+        .btn.active {
+            background: #4b48d6;
+            border-color: #3634d2;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .btn:active.loading::after,
+        .btn.active.loading::after {
+            border-bottom-color: #fff;
+            border-left-color: #fff;
+        }
+
+        .btn[disabled],
+        .btn:disabled,
+        .btn.disabled {
+            cursor: default;
+            opacity: .5;
+            pointer-events: none;
+        }
+
+        .btn.btn-primary {
+            background: #5755d9;
+            border-color: #4b48d6;
+            color: #fff;
+        }
+
+        .btn.btn-primary:focus,
+        .btn.btn-primary:hover {
+            background: #4240d4;
+            border-color: #3634d2;
+            color: #fff;
+        }
+
+        .btn.btn-primary:active,
+        .btn.btn-primary.active {
+            background: #3a38d2;
+            border-color: #302ecd;
+            color: #fff;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+        }
+    </style>
+    <script>
+        let btn_class = ["btn", "btn-primary"];
+        let btn_class_loading = ["btn", "btn-primary", "loading"];
+
+        async function send() {
+            var txt = document.getElementById("text").value;
+            // fetch("http://worldtimeapi.org/api/timezone/Europe/Dublin").then(function (response) {
+            fetch(`http://192.168.8.45/move?text=${txt}`).then(function (response) {
+                setLoading();
+                console.log(txt);
+                return response.json();
+            }).then(function (data) {
+                console.log(data);
+                removeLoading();
+            }).catch(function (err) {
+                console.log('Fetch Error :-S', err);
+            });
+        }
+
+        function setLoading() {
+            var btn = document.getElementById("send-btn");
+            btn.classList.add("loading");
+        }
+
+        async function removeLoading() {
+            await new Promise(r => setTimeout(r, 2000));
+            var btn = document.getElementById("send-btn");
+            btn.classList.remove("loading");
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-group">
+            <label class="form-label" for="text">Split Flap Text</label>
+            <input class="form-input" type="text" id="text" placeholder="Text">
+        </div>
+        <button class="btn btn-primary" id="send-btn" onclick="send()">Send Text</button>
+    </div>
+</body>
+
+</html>

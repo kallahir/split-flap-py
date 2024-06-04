@@ -1,6 +1,9 @@
+import gc
 import machine
 import time
 import uasyncio
+import ujson as json
+import usocket as socket
 
 from asyncserver.request import Request
 from asyncserver.server import AsyncServer
@@ -10,16 +13,36 @@ from unit.unit import Unit
 from unit.manager import UnitManager
 
 print('[starting]')
+# NOTE: Broadcast testing 
+# config_file = open('config.json', 'r') 
+# config = json.loads(config_file.read())
+# print(f'group_id={config["group_id"]}')
+
+# if config['group_id'] == 1:
+#     while True:
+#         print('broadcasting message')
+#         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#         s.sendto("leader", ('192.168.8.255', 1926))
+#         time.sleep(5)
+# else:
+#     while True:
+#         print('waiting broadcast')
+#         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#         s.bind(('192.168.8.255', 1926))
+#         while True:
+#             msg, addr = s.recvfrom(1024)
+#             print(msg, addr)
+
 # NOTE: Third wave of tests using Two Units in a single Unit Manager with fast interleave steps and no APIs
-units =[Unit(StepperMotor(32,33,25,26), 0, HallEffect(39)),Unit(StepperMotor(27,14,12,13), 1, HallEffect(36)),Unit(StepperMotor(15,2,0,4), 2, HallEffect(34))] 
-um = UnitManager(units)
-# um = UnitManager([units[1]])
-um.reset_units()
-time.sleep(1)
-um.move_to_letters('oi?')
-time.sleep(1)
-um.move_to_letters('zzz')
+# units =[Unit(StepperMotor(32,33,25,26), 0, HallEffect(39)),Unit(StepperMotor(27,14,12,13), 1, HallEffect(36)),Unit(StepperMotor(15,2,0,4), 2, HallEffect(34))] 
+# um = UnitManager(units)
+# um.reset_units()
+# time.sleep(1)
 # um.move_to_letters('oi?')
+# time.sleep(1)
+# um.move_to_letters('zzz')
 
 # NOTE: Second wave of tests using Two Units, one at a time, and no APIs
 # m = StepperMotor(32,33,25,26)
@@ -37,12 +60,17 @@ um.move_to_letters('zzz')
 #     time.sleep(5)
 
 # NOTE: First wave of tests using a Single Unit and Async APIs for control
-# server = AsyncServer()
+server = AsyncServer()
 
-# @server.route('/index')
+@server.route('/index')
+async def on(r: Request):
+    gc.collect()
+    page_content = open('/ui/webpages/index.html', 'r').read()
+    return server.response(200, content_type='text/html', content=page_content)
+
+# @server.route('/ping')
 # async def on(r: Request):
-#     page_content = open('/data/main.html', 'r').read()
-#     return server.response(200, content_type='text/html', content=page_content)
+#     return server.response(200, content_type='application/json', content='{"unit": 1}')
 
 # @server.route('/reset')
 # async def on(r: Request):
@@ -57,17 +85,17 @@ um.move_to_letters('zzz')
 # async def on(r: Request):
 #     print(f'[args={r.args}]')
 #     if 'letter' in r.args:
-#         u.move_to_letter(r.args['letter'])
+#         um.move_to_letters(r.args['letter'])
 #         return server.response(200, content=f'unit moved to letter=' + r.args['letter'])
 #     return server.response(400, content='invalid request')
 
-# loop = uasyncio.get_event_loop()
-# loop.create_task(server.start())
+loop = uasyncio.get_event_loop()
+loop.create_task(server.start())
 
-# try: 
-#     loop.run_forever()
-# except Exception as e:
-#     print(f'[exception {e}]')
-# except KeyboardInterrupt:
-#     print('[stopping]')
-#     loop.close()
+try: 
+    loop.run_forever()
+except Exception as e:
+    print(f'[exception {e}]')
+except KeyboardInterrupt:
+    print('[stopping]')
+    loop.close()
