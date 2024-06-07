@@ -77,6 +77,7 @@ async def on(r: Request) -> Response:
 @server.route('/move')
 async def on(r: Request) -> Response:
     gc.collect()
+    print(f'[move:args={r.args}]')
     return Response(content_type=JSON_CONTENT_TYPE, content=json.dumps(r.args))
 
 # @server.route('/reset')

@@ -13,9 +13,9 @@
         let btn_class_loading = ["btn", "btn-primary", "loading"];
 
         async function send() {
+            setLoading();
             var txt = document.getElementById("text").value;
             fetch(`http://192.168.8.45/move?text=${txt}`).then(function (response) {
-                setLoading();
                 console.log(txt);
                 return response.json();
             }).then(function (data) {

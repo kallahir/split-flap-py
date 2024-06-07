@@ -33,7 +33,7 @@ class Request():
             print(f'[parts={parts}]')
             if len(parts) < 1 and len(parts[0].split(' ')) != 3:
                 raise InvalidRequestException('Request doesn\'t have the required minimum number of parts')
-            m = re.search('(^[A-Z]+)\\s+(/[-a-zA-Z0-9_./=]+)(\?[-a-zA-Z0-9_.=&%]*)?', parts[0])
+            m = re.search('(^[A-Z]+)\\s+(/[-a-zA-Z0-9_./=]+)(\?[-a-zA-Z0-9_.=?!&%]*)?', parts[0])
             self.__method, self.__path, self.__params = m.group(1), m.group(2), m.group(3) 
             print(f'[params={self.__params}]')
             if self.__method == 'POST':
