@@ -1,5 +1,4 @@
 import gc
-import machine
 import time
 import uasyncio
 import ujson as json
@@ -13,8 +12,12 @@ from sensor.halleffect import HallEffect
 from unit.unit import Unit
 from unit.manager import UnitManager
 from utils.http import HTML_CONTENT_TYPE, JSON_CONTENT_TYPE
+from machine import Pin
 
 print('[starting]')
+tm = tm1637.TM1637(clk=Pin(23), dio=Pin(22))
+tm.scroll('starting', delay=250)
+
 # NOTE: Broadcast testing 
 # config_file = open('config.json', 'r') 
 # config = json.loads(config_file.read())

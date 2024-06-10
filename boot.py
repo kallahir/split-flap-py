@@ -1,7 +1,11 @@
 import network
 import time
+import tm1637
+from machine import Pin
 
 print('[booting]')
+tm = tm1637.TM1637(clk=Pin(23), dio=Pin(22))
+tm.scroll('booting', delay=250)
 
 secrets = open('secrets.txt', 'r').read()
 ssid, password = secrets.split(',')
