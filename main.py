@@ -77,6 +77,11 @@ async def on(r: Request) -> Response:
     gc.collect()
     return Response(content_type=HTML_CONTENT_TYPE, uri='ui/webpages/config.html')
 
+@server.route('/settings')
+async def on(r: Request) -> Response:
+    gc.collect()
+    return Response(content_type=HTML_CONTENT_TYPE, uri='ui/webpages/settings.html')
+
 @server.route('/move')
 async def on(r: Request) -> Response:
     gc.collect()
